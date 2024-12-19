@@ -29,7 +29,11 @@ This GitHub repository acts as a "template repository" - you can create your own
 
 These can be created public or private - public repos get an additional feature and are free to run, while private repos have additional cost.
 
+Configure your Repository need to allow GitHub Actions to write to your repository.  Confirm this in Settings->Actions->General->Workflow permissions.
+
 If you wish to use the "Whisper" integration you will need to create an account on [Replicate](https://replicate.com/), then copy the API token from that account and create a new GitHub Actions secret in your repository called `REPLICATE_API_TOKEN`. Transcribing videos costs money - usually around $0.20 per minute of audio.
+
+Additionally, if you prefer to use Azure for transcription with Whisper, you will need to configure Azure environment variables. Create an account on Azure, obtain the `AZURE_API_KEY`, `AZURE_API_VERSION`  and `AZURE_API_BASE` values, and set them as GitHub Actions secrets in your repository. Using Whisper via Azure costs approximately $0.36 per hour.
 
 ## Usage
 

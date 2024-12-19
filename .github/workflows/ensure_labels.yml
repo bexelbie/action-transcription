@@ -20,4 +20,5 @@ jobs:
             });
           } catch(e) {
             // Ignore if labels exist already
+            console.log("Error creating labels: ", e);
           }

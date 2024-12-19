@@ -1,0 +1,35 @@
+on:
+  issues:
+    types: [opened]
+  issue_comment:
+    types: [created]
+
+jobs:
+  handle_issues:
+    if: >
+      github.event_name == 'issues' &&
+      github.event.issue.user.login == github.repository_owner
+    uses: ./.github/workflows/do-transcription-caption-retreival.yml
+    secrets: inherit
+
+  issue_created_by_other:
+    if: >
+      github.event_name == 'issues' &&
+      github.event.issue.user.login != github.repository_owner
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment tagging owner
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments \
+            -d '{"body":"@${{ github.repository_owner }} please review this issue for approval."}'
+
+  issue_comment_created:
+    if: >
+      github.event_name == 'issue_comment' &&
+      contains(github.event.comment.body, 'run workflow') &&
+      github.event.comment.author_association == 'OWNER'
+    uses: ./.github/workflows/do-transcription-caption-retreival.yml
+    secrets: inherit
